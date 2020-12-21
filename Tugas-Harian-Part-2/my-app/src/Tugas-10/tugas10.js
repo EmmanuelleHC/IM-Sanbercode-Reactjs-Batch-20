@@ -14,21 +14,23 @@ class Tugas10 extends React.Component {
       <>
             <h2><b>Tabel Harga Buah</b></h2>
                     <table id="tblContent">
+                   <thead>
                     <tr>
                 <th>Nama</th>
                 <th>Harga</th>
                 <th>Buah</th>
             </tr>
-            
-        {dataHargaBuah.map(el=> {
-          return (
+            </thead>
           
-          <tr>
+        {dataHargaBuah.map((el,i) => {
+          return (
+          <tbody>
+          <tr key ={i}>
             <td>{el.nama}</td>
             <td>{el.harga}</td>
             <td>{el.berat} kg</td>
             </tr>
-           
+           </tbody>
           )
         })}
         </table>

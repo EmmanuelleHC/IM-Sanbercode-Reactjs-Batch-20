@@ -8,6 +8,8 @@ class Tugas9 extends React.Component {
        <form id="formbeli">
         <h1>Form Pembelian Buah</h1>
         <table>
+          <thead></thead>
+          <tbody>
            <tr>
               <td>
                  <p>Nama Pelanggan:</p>
@@ -27,42 +29,53 @@ class Tugas9 extends React.Component {
            <tr>
               <td></td>
               <td>
-                 <input type="checkbox" id="semangka" name="semangka" value="Semangka"></input>
-                 
-              </td>
-              <label for="semangka">Semangka</label>
-           </tr>
-           <tr>
-              <td></td>
-              <td><input type="checkbox" id="jeruk" name="jeruk" value="Jeruk"></input>
                 
+                 <input type="checkbox" id="semangka" name="semangka" value="Semangka"></input>
+                 <label >Semangka</label>
               </td>
-               <label for="jeruk"> Jeruk</label>
+              
+              
+            
            </tr>
            <tr>
               <td></td>
               <td>
+              
+              <input type="checkbox" id="jeruk" name="jeruk" value="Jeruk"></input>
+                 <label> Jeruk</label>
+              </td>
+              
+           </tr>
+           <tr>
+              <td></td>
+              <td>
+                 
                  <input type="checkbox" id="nanas" name="nanas" value="Nanas"></input>
+                  <label >Nanas</label>
               </td>
-              <label for="vehicle1">Nanas</label>
+             
            </tr>
            <tr>
               <td></td>
               <td>
+               
                  <input type="checkbox" id="salak" name="salak" value="Salak"></input>
+                <label>Salak</label>
               </td>
-              <label for="vehicle1">Salak</label>
+             
            </tr>
            <tr>
               <td></td>
               <td>
                  <input type="checkbox" id="anggur" name="anggur" value="Anggur"></input>
+                <label >Anggur</label>
               </td>
-              <label for="vehicle1">Anggur</label>
+             
            </tr>
            <tr>
               <td><button>Kirim</button></td>
            </tr>
+           </tbody>
         </table>
         
         
