@@ -8,13 +8,14 @@ import Timer from './Tugas-11/tugas11';
 import Tugas12 from './Tugas-12/tugas12';
 
 import Tugas13 from './Tugas-13/DaftarBuah';
+import Tugas14 from './Tugas-14/Fruit';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
       
-          <Tugas13 />
+          <Tugas14 />
       </header>
     </div>
   );
