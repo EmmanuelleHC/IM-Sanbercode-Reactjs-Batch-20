@@ -1,51 +1,46 @@
-<html>
-  <head>
-    <link href="public/css/style.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
-  </head>
-  <body>
-    <header>
-      
-      
-      <div class="topnav">
-        <img id="logo" src="public/img/logo.png" width="200px" />
-        <a href="contact.html">Contact</a>
-           <a href="about.html">About</a>
-          
- <a href="index.html">Home</a>
-       
-</div>
-      
-    </header>
-    <div class="center">
-        <section>
+import React from 'react';
+import './public/css/style.css';
+import './public/css/font.css';
+
+import Routes from "./route"
+
+class Index extends React.Component {
+    render() {
+    return (
+      <>
+     
+<div>
+         
+  <div className="body">
+   
+    <section >
       <h1>Featured Posts</h1>
       <div id="article-list">
-        <div>
+        <div className="article">
           <a href=""><h3>Lorem Post 1</h3></a>
           <p>
             Lorem Ipsum Dolor Sit Amet, mea te verear signiferumque, per illum labores ne. Blandit omnesque scripserit pri ex, et pri dicant eirmod deserunt. Aeque perpetua ea nec. Sit erant patrioque delicatissimi ut. Et sea quem sint, nam in minim voluptatibus. Etiam placerat eam in.
           </p>
         </div>
-        <div>
-          <a href=""><h3>Lorem Post 2</h3></a>
+        <div className="article">
+          <a href=""><h3>Lorem Post 2a</h3></a>
           <p>
             Lorem Ipsum Dolor Sit Amet, mea te verear signiferumque, per illum labores ne. Blandit omnesque scripserit pri ex, et pri dicant eirmod deserunt. Aeque perpetua ea nec. Sit erant patrioque delicatissimi ut. Et sea quem sint, nam in minim voluptatibus. Etiam placerat eam in.
           </p>
         </div>
-        <div>
+        <div className="article">
           <a href=""><h3>Lorem Post 3</h3></a>
           <p>
             Lorem Ipsum Dolor Sit Amet, mea te verear signiferumque, per illum labores ne. Blandit omnesque scripserit pri ex, et pri dicant eirmod deserunt. Aeque perpetua ea nec. Sit erant patrioque delicatissimi ut. Et sea quem sint, nam in minim voluptatibus. Etiam placerat eam in.
           </p>
         </div>
-        <div>
+        <div className="article">
           <a href=""><h3>Lorem Post 4</h3></a>
           <p>
             Lorem Ipsum Dolor Sit Amet, mea te verear signiferumque, per illum labores ne. Blandit omnesque scripserit pri ex, et pri dicant eirmod deserunt. Aeque perpetua ea nec. Sit erant patrioque delicatissimi ut. Et sea quem sint, nam in minim voluptatibus. Etiam placerat eam in.
           </p>
         </div>
-        <div>
+        <div className="article">
           <a href=""><h3>Lorem Post 5</h3></a>
           <p>
             Lorem Ipsum Dolor Sit Amet, mea te verear signiferumque, per illum labores ne. Blandit omnesque scripserit pri ex, et pri dicant eirmod deserunt. Aeque perpetua ea nec. Sit erant patrioque delicatissimi ut. Et sea quem sint, nam in minim voluptatibus. Etiam placerat eam in.
@@ -53,14 +48,13 @@
         </div>
       </div>
     </section>
-    </div>
-  
-
-    <footer class="site-footer">
-  <div id="footer-content">
-    <p><h5>copyright &copy; 2020 by Sanbercode</h5> </p>
+    <footer>
+      <h5>copyright &copy; 2020 by Sanbercode</h5>
+    </footer>
   </div>
-</footer>
-   
-  </body>
-</html>
+</div>
+      </>
+    )
+  }
+}
+export default Index

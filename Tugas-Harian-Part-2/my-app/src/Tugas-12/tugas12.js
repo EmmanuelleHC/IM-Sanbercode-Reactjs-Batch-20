@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react'
 let dataHargaBuah = [
   {nama: "Semangka", harga: 10000, berat: 1000},
