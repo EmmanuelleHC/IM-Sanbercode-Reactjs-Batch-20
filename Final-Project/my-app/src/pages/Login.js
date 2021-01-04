@@ -12,16 +12,31 @@ const tailLayout = {
 const Login = () => {
  
   const [, setUser] = useContext(UserContext)
-  const [input, setInput] = useState({username: "" , password: ""})
-
+  const [input, setInput] = useState({email: "" , password: ""})
   
   const onFinish = input => {
-    if (input.username === "admin" && input.password === "admin"){
-      setUser({username: input.username})
-      localStorage.setItem("user", JSON.stringify({username: "admin", password: "admin"}))
-    }else{
-      alert("username dan password gagal")
-    }
+    // if (input.username === "admin" && input.password === "admin"){
+    //   setUser({username: input.username})
+    //   localStorage.setItem("user", JSON.stringify({username: "admin", password: "admin"}))
+    // }else{
+    //   alert("username dan password gagal")
+    // }
+
+    axios.post("https://backendexample.sanbersy.com/api/user-login", {
+      email: input.email, 
+      password: input.password
+    }).then(
+      (res)=>{
+        var user = res.data.user
+        var token = res.data.token
+        var currentUser = {name: user.name, email: user.email, token }
+        setUser(currentUser)
+        localStorage.setItem("user", JSON.stringify(currentUser))
+      }
+    ).catch((err)=>{
+      alert(err)
+    })
+
   };
 
   const onFinishFailed = errorInfo => {
@@ -31,8 +46,8 @@ const Login = () => {
     let value = event.target.value
     let name = event.target.name
     switch (name){
-      case "username":{
-        setInput({...input, username: value})
+      case "email":{
+        setInput({...input, email: value})
         break;
       }
       case "password":{
@@ -51,10 +66,10 @@ return (
       onFinishFailed={onFinishFailed}
     >
       <Form.Item
-        label="Username"
-        name="username"
-        rules={[{ required: true, message: 'Please input your username!' }]}
-        onChange={handleChange} value={input.username}
+        label="Email"
+        name="email"
+        rules={[{ required: true, message: 'Please input your email!' }]}
+        onChange={handleChange} value={input.email}
       >
         <Input />
       </Form.Item>
