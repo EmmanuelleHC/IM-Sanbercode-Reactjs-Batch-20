@@ -15,10 +15,11 @@ const Header =() =>{
       <nav>
         <ul>
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About </Link> </li>
-          <li><Link to="/games">Game List </Link> </li>
-          { user && <li><Link to="/books">Movie List </Link></li> }
+          { user === null && <li><Link to="/register">Register </Link></li> }    
+          { user && <li><Link to="/games">Game List </Link></li> }
+          { user && <li><Link to="/movies">Movie List </Link></li> }
           { user === null && <li><Link to="/login">Login </Link></li> }
+          { user && <li><Link to="/change_password">Change Password</Link></li> }
           { user && <li><a style={{cursor: "pointer"}} onClick={handleLogout}>Logout </a></li> }
         </ul>
       </nav>

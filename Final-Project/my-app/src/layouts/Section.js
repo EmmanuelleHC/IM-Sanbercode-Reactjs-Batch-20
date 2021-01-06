@@ -7,9 +7,13 @@ import {
 
 import About from "../pages/About"
 import Home from "../pages/Home"
-import Books from "../pages/Books"
+import Movies from "../pages/Movie"
 import Login from "../pages/Login"
 import Games from "../pages/Games"
+
+import Register from "../pages/Register"
+
+import ChangePassword from "../pages/ChangePassword"
 
 import {UserContext} from "../context/UserContext"
 
@@ -33,12 +37,14 @@ const Section = () =>{
     <section >
       <Switch>
         <Route exact path="/" user={user} component={Home}/>
-        <Route exact path="/about" user={user} component={About}/>
-        <Route exact path="/games" user={user} component={Games}/>
+        <PrivateRoute exact path="/games" user={user} component={Games}/>
+        <PrivateRoute exact path="/movies" user={user} component={Movies}/>
+        
+        <Route exact path="/register" user={user} component={Register}/>
+        <Route exact path="/change_password" user={user} component={ChangePassword}/>
       
         <LoginRoute exact path="/login" user={user} component={Login}/>
-        <PrivateRoute exact path="/books" user={user} component={Books}/>
-      </Switch>
+             </Switch>
     </section>
   )
 }

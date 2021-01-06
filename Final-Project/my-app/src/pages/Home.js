@@ -1,34 +1,8 @@
 import React, {Component} from "react"
 import axios from "axios"
-import { Carousel,Card,Button,Modal } from 'antd';
+import { Carousel,Card,Modal } from 'antd';
 import "./Games.css"
-function formatRupiah(angka, prefix){
- 
-  if(angka)
-  {
-    var number_string = angka.toString(),
-    split   		= number_string.split(','),
-    sisa     		= split[0].length % 3,
-    rupiah     		= split[0].substr(0, sisa),
-    ribuan     		= split[0].substr(sisa).match(/\d{3}/gi),
-    separator;
-    // tambahkan titik jika yang di input sudah menjadi angka ribuan
-    if(ribuan){
-      separator = sisa ? '.' : '';
-      rupiah += separator + ribuan.join('.');
-    }
 
-    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-    return 'Rp. ' + rupiah + ",-";
-  }
-  
-}
-let contentGame={
-
-}
-let contentMovie={
-
-}
 const detailGame = (id) => {
   
   let idGame = parseInt(id)
