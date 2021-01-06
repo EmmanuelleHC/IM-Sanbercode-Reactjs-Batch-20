@@ -1,8 +1,8 @@
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form,Alert, Input, Button, Checkbox,Card } from 'antd';
 import React, { useContext, useState } from "react"
 import {UserContext} from "../context/UserContext"
 import axios from "axios"
-
+import "./Login.css"
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
@@ -15,15 +15,12 @@ const Login = () => {
  
   const [, setUser] = useContext(UserContext)
   const [input, setInput] = useState({email: "" , password: ""})
-  
+   const [status, setStatus]  =  useState({
+    showModalError: null,
+   
+  })
   const onFinish = input => {
-    // if (input.username === "admin" && input.password === "admin"){
-    //   setUser({username: input.username})
-    //   localStorage.setItem("user", JSON.stringify({username: "admin", password: "admin"}))
-    // }else{
-    //   alert("username dan password gagal")
-    // }
-
+  
     axios.post("https://backendexample.sanbersy.com/api/user-login", {
       email: input.email, 
       password: input.password
@@ -34,15 +31,18 @@ const Login = () => {
         var currentUser = {name: user.name, email: user.email, token }
         setUser(currentUser)
         localStorage.setItem("user", JSON.stringify(currentUser))
+         setStatus({...status, showModalError:false});
       }
     ).catch((err)=>{
-      alert(err)
+      setStatus({...status, showModalError:true});
+
     })
 
   };
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
+     setStatus({...status, showModalError:true});
   };
   const handleChange = (event) =>{
     let value = event.target.value
@@ -59,8 +59,16 @@ const Login = () => {
       default:{break;}
     }
   }
+
 return (
-    <Form
+  <div className="site-card-border-less-wrapper">
+    
+    {
+        status.showModalError &&
+         <Alert type='error' message='Gagal Login' banner />
+   }
+   <Card title="Login" bordered={false} >
+      <Form
       {...layout}
       name="basic"
       initialValues={{ remember: true }}
@@ -93,10 +101,13 @@ return (
 
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
-          Submit
+          Login
         </Button>
       </Form.Item>
     </Form>
+    </Card>
+  </div>
+    
   );
 };
 
