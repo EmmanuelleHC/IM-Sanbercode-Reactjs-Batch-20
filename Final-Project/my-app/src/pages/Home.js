@@ -40,6 +40,29 @@ const detailMovie = (id) => {
 
    axios.get(`https://backendexample.sanbersy.com/api/data-movie/${idMovie}`)
     .then(res => {
+       let secondsToGo = 5;
+        const modal = Modal.success({
+          title: 'Detail Movie',
+          content: ``,
+        });
+        const timer = setInterval(() => {
+          secondsToGo -= 1;
+          modal.update({
+            content: `
+                      Title : ${res.data.title}
+                      Description : ${res.data.description}
+                      Duration: ${res.data.duration}
+                      Genre : ${res.data.genre}
+                      Rating : ${res.data.rating}
+                      Review : ${res.data.review}
+                      Year : ${res.data.year}`
+                      
+          });
+        }, 1000);
+        setTimeout(() => {
+          clearInterval(timer);
+          modal.destroy();
+        }, secondsToGo * 1000);
         
     })
 }

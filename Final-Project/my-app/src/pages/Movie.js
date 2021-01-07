@@ -1,11 +1,21 @@
 import React, {useState, useEffect} from "react"
 import axios from "axios"
-import { Table } from 'antd';
+import { Form,Alert, Input, Button, Card } from 'antd';
+
 
 import "./Movie.css"
-
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
 const Movie = () => {
-  
+  const [status, setStatus]  =  useState({
+    showModalError: null,
+    showModalSuccess:null
+  })
   const [movies, setMovies] =  useState(null)
   const [input, setInput]  =  useState({
    
@@ -21,7 +31,7 @@ const Movie = () => {
   const [selectedId, setSelectedId]  =  useState(0)
   const [statusForm, setStatusForm]  =  useState("create")
   const [search, setSearch] = useState("")
-
+  const [form] = Form.useForm();
   useEffect( () => {
     if (movies === null){
       axios.get(`https://backendexample.sanbersy.com/api/data-movie`)
@@ -95,10 +105,13 @@ const Movie = () => {
       {break;}
     }
   }
-
-  const handleSubmit = (event) =>{
-    // menahan submit
-    event.preventDefault()
+   const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo);
+     setStatus({...status, showModalError:true});
+      setStatus({...status, showModalSuccess:false});
+  };
+  const onFinish = (input) =>{
+    
 
     let title = input.title
     console.log(input)
@@ -120,6 +133,20 @@ const Movie = () => {
         },{headers: {"Authorization" : "Bearer "+ token}})
         .then(res => {
             setMovies([...movies, {id: res.data.id, ...input}])
+            setStatus({...status, showModalError:false});
+            setStatus({...status, showModalSuccess:true});
+            setSelectedId(0)
+            form.setFieldsValue({
+            description: "",
+              duration:0,
+              genre: "",
+              image_url: "",
+              rating:0,
+              review:"",
+              title:"",
+              year:0
+          });
+            
         })
       }else if(statusForm === "edit"){
         var token=(JSON.parse(localStorage.getItem("user"))['token'])
@@ -145,13 +172,15 @@ const Movie = () => {
             singleMovie.year = input.year
             singleMovie.image_url = input.image_url
             setMovies([...movies])
+            setStatus({...status, showModalError:false});
+            setStatus({...status, showModalSuccess:true});
         })
       }
       
       setStatusForm("create")
       setSelectedId(0)
-      setInput({
-        description: "",
+       form.setFieldsValue({
+           description: "",
         duration:0,
         genre: "",
         image_url: "",
@@ -159,7 +188,8 @@ const Movie = () => {
         review:"",
         title:"",
         year:0
-      })
+          });
+      
     }
 
   }
@@ -180,8 +210,9 @@ const Movie = () => {
     
     const handleEdit = () =>{
       let singleMovie = movies.find(x=> x.id === itemId)
-      setInput({
-        title: singleMovie.title,
+     
+       form.setFieldsValue({
+            title: singleMovie.title,
         description: singleMovie.description,
         duration: singleMovie.duration,
         genre: singleMovie.genre,
@@ -189,7 +220,8 @@ const Movie = () => {
         review: singleMovie.review,
         year: singleMovie.year,
         image_url: singleMovie.image_url
-      })
+          });
+      console.log(singleMovie)
       setSelectedId(itemId)
       setStatusForm("edit")
     }
@@ -291,81 +323,102 @@ const Movie = () => {
             }
         </tbody>
       </table>
-      {/* Form */}
-      <h1>Movie Form</h1>
-      <form style={{textAlign: "left"}} onSubmit={handleSubmit}>
-        <div>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Title:
-          </label>
-          <input style={{display: "inline-block", width: "60%"}} type="text" name="title" value={input.title} onChange={handleChange}/>
-          <br/>
-          <br/>
-        </div>
-        <div style={{marginTop: "20px"}}>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Year:
-          </label>
-          <input style={{display: "inline-block"}} type="number" max={2020} min={1980}  name="year" value={input.year} onChange={handleChange}/>
-          <br/>
-          <br/>
-        </div>
-        <div>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Description:
-          </label>
-          <textarea style={{display: "inline-block"}} cols="50" rows="3" type="text" name="description" value={input.description} onChange={handleChange}/>
-          <br/>
-          <br/>
-        </div>
-        <div>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Duration:
-          </label>
-           <input style={{display: "inline-block", width: "60%"}} type="number" name="duration" value={input.duration} onChange={handleChange}/>
-         
-         <br/>
-          <br/>
-        </div>
-        <div style={{marginTop: "20px"}}>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Genre:
-          </label>
-           <input style={{display: "inline-block", width: "60%"}} type="text" name="genre" value={input.genre} onChange={handleChange}/>
-         
-          <br/>
-          <br/>
-        </div>
-        <div>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Rating:
-          </label>
-           <input style={{display: "inline-block", width: "60%"}} type="number" name="rating" value={input.rating} onChange={handleChange}/>
-         
-         <br/>
-          <br/>
-        </div>
-        <div>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Review:
-          </label>
-          <textarea style={{display: "inline-block"}} cols="50" rows="3" type="text" name="review" value={input.review} onChange={handleChange}/>
-          <br/>
-          <br/>
-        </div>   
-        <div style={{marginTop: "20px"}}>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Image Url:
-          </label>
-          <textarea style={{display: "inline-block"}} cols="50" rows="3" type="text" name="image_url" value={input.image_url} onChange={handleChange}/>
-          <button>submit</button>
-          <br/>
-          <br/>
-        </div>
-        <br/>
-        <br/>
-        
-      </form>
+     <div className="site-card-border-less-wrapper">
+    
+    {
+        status.showModalError &&
+         <Alert type='error' message='Gagal Perbaharui Data' banner />
+   }
+    {
+        status.showModalSuccess &&
+         <Alert type='error' message='Berhasil Perbaharui Data' banner />
+   }
+   <Card title="Movie Form" bordered={false} >
+      <Form
+      {...layout}
+      name="basic"
+      form={form} 
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+    >
+      <Form.Item
+        label="Title"
+        name="title"
+        rules={[{ required: true, message: 'Please input your title!' }]}
+        onChange={handleChange} value={input.title}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Year"
+        name="year"
+        rules={[{ required: true, message: 'Please input your year!' }]}
+        onChange={handleChange} value={input.year}
+      >
+        <Input />
+      </Form.Item>
+        <Form.Item
+        label="Description"
+        name="description"
+        rules={[{ required: true, message: 'Please input your description!' }]}
+        onChange={handleChange} value={input.description}
+      >
+        <Input />
+      </Form.Item>
+        <Form.Item
+        label="Duration"
+        name="duration"
+        rules={[{ required: true, message: 'Please input your duration!' }]}
+        onChange={handleChange} value={input.duration}
+      >
+        <Input />
+      </Form.Item>
+       <Form.Item
+        label="Genre"
+        name="genre"
+        rules={[{ required: true, message: 'Please input your genre!' }]}
+        onChange={handleChange} value={input.genre}
+      >
+        <Input />
+      </Form.Item>
+        <Form.Item
+        label="Rating"
+        name="rating"
+        rules={[{ required: true, message: 'Please input your rating!' }]}
+        onChange={handleChange} value={input.rating}
+      >
+        <Input />
+      </Form.Item>
+        <Form.Item
+        label="Review"
+        name="review"
+        rules={[{ required: true, message: 'Please input your review!' }]}
+        onChange={handleChange} value={input.review}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        label="Image Url"
+        name="image_url"
+        rules={[{ required: true, message: 'Please input your image url!' }]}
+        onChange={handleChange} value={input.image_url}
+      >
+        <Input />
+      </Form.Item>
+
+      
+      
+
+      <Form.Item {...tailLayout}>
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+    </Card>
+  </div>
+    
     </>
   )
 }

@@ -1,11 +1,21 @@
 import React, {useState, useEffect} from "react"
 import axios from "axios"
+
 import "./Games.css"
 
-import { Button } from 'antd';
-
+import { Form,Alert, Input, Button, Card } from 'antd';
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
 const Game = () => {
-  
+  const [status, setStatus]  =  useState({
+    showModalError: null,
+    showModalSuccess:null
+  })
   const [games, setGames] =  useState(null)
   const [input, setInput]  =  useState({
    
@@ -22,6 +32,7 @@ const Game = () => {
   const [selectedId, setSelectedId]  =  useState(0)
   const [statusForm, setStatusForm]  =  useState("create")
   const [search, setSearch] = useState("")
+  const [form] = Form.useForm();
 
   useEffect( () => {
     if (games === null){
@@ -86,11 +97,13 @@ const Game = () => {
       {break;}
     }
   }
-
-  const handleSubmit = (event) =>{
-    // menahan submit
-    event.preventDefault()
-
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo);
+     setStatus({...status, showModalError:true});
+      setStatus({...status, showModalSuccess:false});
+  };
+  const onFinish = (input) =>{
+   
     let name = input.name
     console.log(input)
 
@@ -103,16 +116,28 @@ const Game = () => {
           singlePlayer: input.singlePlayer,
           multiplayer: input.multiplayer,
           name: input.name,
-          platform: input.rating,
           release: input.release,
           image_url: input.image_url
         },{headers: {"Authorization" : "Bearer "+ token}})
         .then(res => {
             setGames([...games, {id: res.data.id, ...input}])
+            setStatus({...status, showModalError:false});
+            setStatus({...status, showModalSuccess:true});
+            setSelectedId(0)
+            setInput({
+              genre: "",
+              image_url: "",
+              singlePlayer:true,
+              multiplayer:false,
+              name:"",
+              platform:"",
+              release:""
+            })
+            
         })
       }else if(statusForm === "edit"){
         var token=(JSON.parse(localStorage.getItem("user"))['token'])
-    
+        console.log('aneh')
         axios.put(`https://backendexample.sanbersy.com/api/data-game/${selectedId}`, {
           genre: input.genre,
           singlePlayer: input.singlePlayer,
@@ -128,27 +153,27 @@ const Game = () => {
             singleGame.singlePlayer = input.singlePlayer
             singleGame.multiplayer = input.multiplayer
             singleGame.name = input.name
-            singleGame.rating = input.rating
             singleGame.release = input.release
             singleGame.image_url = input.image_url
             setGames([...games])
+            console.log('masuk')            
+            setStatus({...status, showModalError:false});
+            setStatus({...status, showModalSuccess:true});
         })
       }
       
       setStatusForm("create")
       setSelectedId(0)
-      setInput({
-        genre: "",
+      form.setFieldsValue({
+         genre: "",
         image_url: "",
         singlePlayer:true,
         multiplayer:false,
         name:"",
         platform:"",
         release:""
-
-
-
-      })
+      });
+      
     }
 
   }
@@ -168,24 +193,34 @@ const Game = () => {
     }
     
     const handleEdit = () =>{
+      
       let singleGame = games.find(x=> x.id === itemId)
+      form.setFieldsValue({
+        genre: singleGame.genre,
+        singlePlayer: singleGame.singlePlayer,
+        multiplayer: singleGame.multiplayer,
+        name: singleGame.name,
+        platform:singleGame.platform,
+        release: singleGame.release,
+        image_url: singleGame.image_url
+      });
       setInput({
         genre: singleGame.genre,
         singlePlayer: singleGame.singlePlayer,
         multiplayer: singleGame.multiplayer,
         name: singleGame.name,
         platform:singleGame.platform,
-        rating: singleGame.rating,
         release: singleGame.release,
         image_url: singleGame.image_url
       })
+      console.log(input)
       setSelectedId(itemId)
       setStatusForm("edit")
     }
 
     return(
       <>
-        <button onClick={handleEdit}>Edit</button>
+        <button   onClick={() => handleEdit(itemId)}>Edit</button>
         &nbsp;
         <button onClick={handleDelete}>Delete</button>
       </>
@@ -214,7 +249,6 @@ const Game = () => {
           singlePlayer: el.singlePlayer,
           multiplayer: el.multiplayer,
           name: el.name,
-          rating: el.rating,
           release: el.release,
           image_url: el.image_url
         }
@@ -277,72 +311,94 @@ const Game = () => {
             }
         </tbody>
       </table>
-      {/* Form */}
-      <h1>Game Form</h1>
-      <form style={{textAlign: "left"}} onSubmit={handleSubmit}>
-        <div>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Name:
-          </label>
-          <input style={{display: "inline-block", width: "60%"}} type="text" name="name" value={input.name} onChange={handleChange}/>
-          <br/>
-          <br/>
-        </div>
-        <div style={{marginTop: "20px"}}>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Genre:
-          </label>
-          <input style={{display: "inline-block", width: "60%"}} type="text" name="genre" value={input.genre} onChange={handleChange}/>
-         <br/>
-          <br/>
-        </div>
-        <div style={{marginTop: "20px"}}>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Platform:
-          </label>
-          <input style={{display: "inline-block", width: "60%"}} type="text" name="platform" value={input.platform} onChange={handleChange}/>
-         <br/>
-          <br/>
-        </div>
-        <div style={{marginTop: "20px"}}>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Single Player:
-          </label>
-          <input style={{display: "inline-block", width: "60%"}} type="text" name="singlePlayer" value={input.singlePlayer} onChange={handleChange}/>
-         <br/>
-          <br/>
-        </div>
-         <div style={{marginTop: "20px"}}>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Multi Player:
-          </label>
-          <input style={{display: "inline-block", width: "60%"}} type="text" name="multiplayer" value={input.multiplayer} onChange={handleChange}/>
-         <br/>
-          <br/>
-        </div>
-         <div style={{marginTop: "20px"}}>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Release:
-          </label>
-          <input style={{display: "inline-block", width: "60%"}} type="text" name="release" value={input.release} onChange={handleChange}/>
-         <br/>
-          <br/>
-        </div>
-         
-        <div style={{marginTop: "20px"}}>
-          <label style={{display: "inline-block", width: "150px"}}>
-            Image Url:
-          </label>
-          <textarea style={{display: "inline-block"}} cols="50" rows="3" type="text" name="image_url" value={input.image_url} onChange={handleChange}/>
-           <button>submit</button>
-          <br/>
-          <br/>
-        </div>
-        <div style={{marginTop: "20px"}}>
-          
-        </div>
-       
-      </form>
+        <div className="site-card-border-less-wrapper">
+    
+    {
+        status.showModalError &&
+         <Alert type='error' message='Gagal Perbaharui Data' banner />
+   }
+    {
+        status.showModalSuccess &&
+         <Alert type='success' message='Berhasil Perbaharui Data' banner />
+   }
+   <Card title="Game Form" bordered={false} >
+      <Form
+      {...layout}
+      name="basic"
+      form={form} 
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+    >
+      <Form.Item
+        label="Name"
+        name="name"
+        rules={[{ required: true, message: 'Please input your name!' }]}
+        onChange={handleChange} value={input.name}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Genre"
+        name="genre"
+        rules={[{ required: true, message: 'Please input your genre!' }]}
+        onChange={handleChange} value={input.genre}
+      >
+        <Input />
+      </Form.Item>
+        <Form.Item
+        label="Platform"
+        name="platform"
+        rules={[{ required: true, message: 'Please input your platform!' }]}
+        onChange={handleChange} value={input.platform}
+      >
+        <Input />
+      </Form.Item>
+        <Form.Item
+        label="Single Player"
+        name="singlePlayer"
+        rules={[{ required: true, message: 'Please input your single player!' }]}
+        onChange={handleChange} value={input.singlePlayer}
+      >
+        <Input />
+      </Form.Item>
+       <Form.Item
+        label="Multi Player"
+        name="multiplayer"
+        rules={[{ required: true, message: 'Please input your multiplayer!' }]}
+        onChange={handleChange} value={input.multiplayer}
+      >
+        <Input />
+      </Form.Item>
+
+        <Form.Item
+        label="Release"
+        name="release"
+        rules={[{ required: true, message: 'Please input your release!' }]}
+        onChange={handleChange} value={input.release}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        label="Image Url"
+        name="image_url"
+        rules={[{ required: true, message: 'Please input your image url!' }]}
+        onChange={handleChange} value={input.image_url}
+      >
+        <Input />
+      </Form.Item>
+
+      
+      
+
+      <Form.Item {...tailLayout}>
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+    </Card>
+  </div>
     </>
   )
 }
